@@ -1,0 +1,22 @@
+name: bongga_flutter_map
+description: A new Flutter package to display a custom flutter_map
+version: 0.0.1
+author: Bongga
+homepage: https://bongga.co
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_map:
+  rxdart: ^0.22.1
+  geolocator: ^5.1.1+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
