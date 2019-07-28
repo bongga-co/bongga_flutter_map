@@ -40,4 +40,21 @@ class PositionUtil {
 
     return stream;
   }
+
+  static Stream<Position> getPositionStream({
+    int timeInterval = 3000, 
+    int distanceFilter = 1 
+  }) {
+
+  final opts = LocationOptions(
+    accuracy: LocationAccuracy.best,
+    timeInterval: timeInterval,
+    distanceFilter: distanceFilter
+  );
+
+  Stream<Position> positionStream = Geolocator().getPositionStream(opts)
+      .asBroadcastStream();
+
+  return positionStream;
+}
 }

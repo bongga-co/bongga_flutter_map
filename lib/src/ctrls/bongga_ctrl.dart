@@ -66,10 +66,12 @@ class Controller extends MainController {
   /// Custom marker
   static Widget _buildMarker(BuildContext _) => DotMarker();
 
-  void _getPositionStream(Stream<Position> newStream) async {
-    PositionUtil.getPositionUpdates().then((stream) {
-      positionStream = newStream ?? stream;
-    });
+  void _getPositionStream(Stream<Position> stream) {
+    // PositionUtil.getPositionUpdates().then((stream) {
+    //   positionStream = newStream ?? stream;
+    // });
+
+    positionStream = stream ?? PositionUtil.getPositionStream();
   }
 
   /// Enable or disable autocenter
