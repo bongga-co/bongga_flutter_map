@@ -18,7 +18,7 @@ class MarkerState {
   List<Marker> get markers => _markers;
   Map<String, Marker> get namedMarkers => _namedMarkers;
 
-  Future<void> addMarker({ 
+  Future<void> addMarker({
     @required Marker marker, 
     @required String name 
   }) async {
@@ -51,7 +51,7 @@ class MarkerState {
         throw ("Marker $name not found in map");
       }
     } catch (e) {
-      throw ("Can not remove marker: $e");
+      //throw ("Can not remove marker: $e");
     }
 
     try {

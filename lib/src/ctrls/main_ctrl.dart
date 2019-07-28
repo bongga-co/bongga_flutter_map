@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bongga_flutter_map/src/states/polygon_state.dart';
 import 'package:bongga_flutter_map/src/states/marker_state.dart';
 import 'package:bongga_flutter_map/src/states/line_state.dart';
 import 'package:bongga_flutter_map/src/states/map_state.dart';
 import 'package:bongga_flutter_map/src/models/main_ctrl_model.dart';
-import 'package:latlong/latlong.dart';
+import 'package:bongga_flutter_map/src/states/overlay_image_state.dart';
 
 class MainController {
   final MapController mapCtrl;
@@ -21,6 +22,7 @@ class MainController {
   MarkerState _markerState;
   LineState _lineState;
   PolygonState _polygonState;
+  OverlayImageState _overlayImageState;
 
   MainController({ @required this.mapCtrl }) : assert(mapCtrl != null) {
 
@@ -32,6 +34,11 @@ class MainController {
       mapController: mapCtrl,
       notify: notify,
       markerState: _markerState
+    );
+
+    _overlayImageState = OverlayImageState(
+      mapController: mapCtrl,
+      notify: notify,
     );
 
     mapCtrl.onReady.then((_) {
@@ -60,6 +67,12 @@ class MainController {
   /// The markers present on the map and their names
   Map<String, Marker> get namedMarkers => _markerState.namedMarkers;
 
+  /// The images present on the map
+  List<OverlayImage> get images => _overlayImageState.images;
+
+  /// The markers present on the map and their names
+  Map<String, OverlayImage> get namedImages => _overlayImageState.namedImages;
+
   /// The lines present on the map
   List<Polyline> get lines => _lineState.lines;
 
@@ -79,9 +92,9 @@ class MainController {
   Future<void> centerOnPoint(LatLng point) => _mapState.centerOnPoint(point);
 
   /// The callback used to handle gestures and keep the state in sync
-  void onPositionChanged(MapPosition pos, bool gesture) {
+  /*void onPositionChanged(MapPosition pos, bool gesture) {
     _mapState.onPositionChanged(pos, gesture);
-  }
+  }*/
     
   /// Add a marker on the map
   Future<void> addMarker({ @required Marker marker, @required String name }) async {
@@ -93,7 +106,6 @@ class MainController {
     _markerState.removeMarker(name: name);
   }
       
-
   /// Add multiple markers to the map
   Future<void> addMarkers({@required Map<String, Marker> markers}) async {
      _markerState.addMarkers(markers: markers);
@@ -136,6 +148,29 @@ class MainController {
       borderWidth: borderWidth,
       borderColor: borderColor
     );
+  }
+
+  /// Add an image on the map
+  Future<void> addImage({ 
+    @required OverlayImage image, 
+    @required String name 
+  }) async {
+    _overlayImageState.addImage(image: image, name: name);
+  }
+    
+  /// Remove an image from the map
+  Future<void> removeImage({ @required String name }) async {
+    _overlayImageState.removeImage(name: name);
+  }
+      
+  /// Add multiple images to the map
+  Future<void> addImages({ @required Map<String, OverlayImage> images }) async {
+     _overlayImageState.addImages(images: images);
+  }
+
+  /// Remove multiple images from the map
+  Future<void> removeImages({@required List<String> names}) async {
+    _overlayImageState.removeImages(names: names);
   }
     
   /// Notify to the stream

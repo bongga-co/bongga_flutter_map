@@ -6,3 +6,6 @@ export 'src/widgets/radar_widget.dart';
 
 // Controllers
 export 'src/ctrls/bongga_ctrl.dart';
+
+// Utils
+export 'src/utils/position_util.dart';

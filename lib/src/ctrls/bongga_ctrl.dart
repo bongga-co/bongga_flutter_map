@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:bongga_flutter_map/src/utils/position_util.dart';
-import 'package:bongga_flutter_map/src/widgets/dot_maker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:bongga_flutter_map/src/utils/position_util.dart';
+import 'package:bongga_flutter_map/src/widgets/dot_maker_widget.dart';
 import 'package:bongga_flutter_map/src/models/main_ctrl_model.dart';
 import 'package:bongga_flutter_map/src/ctrls/main_ctrl.dart';
 
@@ -23,6 +23,7 @@ class Controller extends MainController {
 
   StreamSubscription<Position> _positionSubs;
   bool autoCenter = false;
+  bool _mapReady = false;
 
   Marker _marker = Marker(
     point: LatLng(0.0, 0.0),
@@ -38,14 +39,20 @@ class Controller extends MainController {
     positionStreamEnabled = positionStreamEnabled ?? true;
 
     if (positionStreamEnabled) {
-      positionStream = positionStream ?? PositionUtil.getPositionStream();
+      _getPositionStream(positionStream);
     }
       
     onReady.then((_) {
       if (positionStreamEnabled) _subscribeToPositionStream();
+
+      PositionUtil.getLocation().then((position) {
+        updateMarkerFromPosition(position: position);
+      });
       
       if (!_completer.isCompleted) {
         _completer.complete();
+
+        _mapReady = true;
       }
     });
   }
@@ -53,19 +60,16 @@ class Controller extends MainController {
   @override
   MapController mapCtrl;
 
-  MapController get mapController => mapCtrl;
-
-  set mapController(MapController ctrl) {
-    mapCtrl = ctrl;
-  }
+  bool get mapReady => _mapReady;
 
   /// Custom marker
-  static Widget _buildMarker(BuildContext _) {
-    return DotMarker();
-  }
+  static Widget _buildMarker(BuildContext _) => DotMarker();
 
-  /// On ready callback: this is fired when the contoller is ready
-  Future<Null> get onMapReady => _completer.future;
+  void _getPositionStream(Stream<Position> newStream) async {
+    PositionUtil.getPositionUpdates().then((stream) {
+      positionStream = newStream ?? stream;
+    });
+  }
 
   /// Enable or disable autocenter
   Future<void> toggleAutoCenter() async {
@@ -76,28 +80,19 @@ class Controller extends MainController {
   }
 
   /// Updates the marker on the map from a position
-  Future<void> updateMarkerFromPosition({
-    @required Position position
-  }) async {
+  Future<void> updateMarkerFromPosition({ @required Position position }) async {
 
-    if (position == null) throw ArgumentError("position must not be null");
+    if (position == null) return;
   
-    LatLng point = LatLng(
-      position.latitude, 
-      position.longitude
-    );
+    LatLng point = LatLng(position.latitude, position.longitude);
 
     try {
       await removeMarker(name: "marker");
     } catch (e) {
-      print("WARNING: livemap: can not remove livemarker from map");
+      
     }
 
-    Marker marker = Marker(
-      point: point,
-      builder: _buildMarker
-    );
-
+    final marker = Marker(point: point, builder: _buildMarker);
     _marker = marker;
 
     await addMarker(marker: _marker, name: "marker");
@@ -119,18 +114,14 @@ class Controller extends MainController {
   }
 
   /// Toggle live position stream updates
-  void togglePositionStreamSubscription({ 
-    Stream<Position> newPositionStream 
-  }) {
+  void togglePositionStreamSubscription({ Stream<Position> stream }) async {
 
     positionStreamEnabled = !positionStreamEnabled;
     
     if (!positionStreamEnabled) {
-      _positionSubs.cancel();
+      _positionSubs?.cancel();
     } else {
-      newPositionStream = newPositionStream ?? PositionUtil.getPositionStream();
-      positionStream = newPositionStream;
-
+      _getPositionStream(stream);
       _subscribeToPositionStream();
     }
 
@@ -143,9 +134,11 @@ class Controller extends MainController {
 
 
   void _subscribeToPositionStream() {
-    _positionSubs = positionStream.listen((Position position) {
-      _positionStreamCallbackAction(position);
-    });
+    if(positionStream != null) {
+      _positionSubs = positionStream.listen((Position position) {
+        _positionStreamCallbackAction(position);
+      });
+    }
   }
 
   /// Process the position stream position
@@ -155,7 +148,7 @@ class Controller extends MainController {
     if (autoCenter) centerOnPosition(position);
 
     notify(
-      "currentPosition", 
+      "currentPosition",
       LatLng(position.latitude, position.longitude),
       _positionStreamCallbackAction
     );
