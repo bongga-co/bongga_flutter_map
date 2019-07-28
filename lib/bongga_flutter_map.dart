@@ -13,4 +13,5 @@ export 'src/utils/position_util.dart';
 
 // Dependencies
 export 'package:latlong/latlong.dart';
+export 'package:geolocator/geolocator.dart';
 export 'package:flutter_map/flutter_map.dart';

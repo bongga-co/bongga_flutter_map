@@ -4,10 +4,12 @@ class DotMarker extends StatelessWidget {
 
   final Color color;
   final double size;
+  final double borderWidth;
 
   DotMarker({ 
     this.color = Colors.orange, 
-    this.size = 30.0,
+    this.size = 10.0,
+    this.borderWidth = 1.0,
     Key key 
   }) : super(key: key);
 
@@ -19,7 +21,7 @@ class DotMarker extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(size),
         color: color,
-        border: Border.all(color: Colors.white, width: 5.0),
+        border: Border.all(color: Colors.white, width: borderWidth),
       ),
     );
   }

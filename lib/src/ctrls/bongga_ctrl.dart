@@ -26,6 +26,8 @@ class Controller extends MainController {
   bool _mapReady = false;
 
   Marker _marker = Marker(
+    width: 10.0,
+    height: 10.0,
     point: LatLng(0.0, 0.0),
     builder: _buildMarker
   );
@@ -37,17 +39,16 @@ class Controller extends MainController {
   }) : assert(mapCtrl != null), super(mapCtrl: mapCtrl) {
 
     positionStreamEnabled = positionStreamEnabled ?? true;
-
-    if (positionStreamEnabled) {
-      _getPositionStream(positionStream);
-    }
       
     onReady.then((_) {
-      if (positionStreamEnabled) _subscribeToPositionStream();
-
       PositionUtil.getLocation().then((position) {
         updateMarkerFromPosition(position: position);
       });
+
+      if (positionStreamEnabled) {
+        _getPositionStream(positionStream);
+        _subscribeToPositionStream();
+      }
       
       if (!_completer.isCompleted) {
         _completer.complete();
@@ -92,7 +93,13 @@ class Controller extends MainController {
       
     }
 
-    final marker = Marker(point: point, builder: _buildMarker);
+    final marker = Marker(
+      width: 10.0,
+      height: 10.0,
+      point: point, 
+      builder: _buildMarker
+    );
+
     _marker = marker;
 
     await addMarker(marker: _marker, name: "marker");

@@ -4,8 +4,10 @@ class PositionUtil {
   static final _glocator = Geolocator();
 
   static Future<bool> isLocationServicesEnabled() async {
-    final status  = await _glocator.checkGeolocationPermissionStatus();
-    return (status == GeolocationStatus.granted);
+    // final status  = await _glocator.checkGeolocationPermissionStatus();
+    // return (status == GeolocationStatus.granted);
+
+    return await _glocator.isLocationServiceEnabled();
   }
 
   static Future<Position> getLocation() async {
@@ -30,8 +32,7 @@ class PositionUtil {
     if(isEnabled) {
       final opts = LocationOptions(
         accuracy: LocationAccuracy.best,
-        distanceFilter: 10,
-        timeInterval: 3000
+        distanceFilter: 1,
       );
 
       stream = _glocator.getPositionStream(opts).asBroadcastStream();
