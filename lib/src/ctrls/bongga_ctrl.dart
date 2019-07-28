@@ -6,7 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bongga_flutter_map/src/utils/position_util.dart';
-import 'package:bongga_flutter_map/src/widgets/dot_maker_widget.dart';
+import 'package:bongga_flutter_map/src/widgets/dot_marker_widget.dart';
 import 'package:bongga_flutter_map/src/models/main_ctrl_model.dart';
 import 'package:bongga_flutter_map/src/ctrls/main_ctrl.dart';
 
