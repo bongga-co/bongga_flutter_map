@@ -10,3 +10,7 @@
 
 * Fix location updates
 * Fix custom marker size
+
+## [0.0.4] - 2019/07/28
+
+* Show user location if it is on the bounds

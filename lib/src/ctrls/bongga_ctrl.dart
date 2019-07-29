@@ -15,16 +15,14 @@ class Controller extends MainController {
   final Completer<Null> _completer = Completer<Null>();
   final _subject = PublishSubject<MainControllerChange>();
 
-  /// The Geolocator position stream
-  Stream<Position> positionStream;
-
-  /// Enable or not the position stream
-  bool positionStreamEnabled;
-
-  StreamSubscription<Position> _positionSubs;
+  bool locationUpdates;
   bool autoCenter = false;
-  bool _mapReady = false;
+  LatLngBounds bounds;
 
+  LatLng _userLocation;
+  Stream<Position> _positionStream;
+  StreamSubscription<Position> _positionSubs;
+  bool _mapReady = false;
   Marker _marker = Marker(
     width: 10.0,
     height: 10.0,
@@ -34,19 +32,21 @@ class Controller extends MainController {
   
   Controller({
     @required this.mapCtrl,
-    this.positionStream,
-    this.positionStreamEnabled
-  }) : assert(mapCtrl != null), super(mapCtrl: mapCtrl) {
+    @required this.bounds,
+    this.locationUpdates
+  }) : assert(mapCtrl != null), 
+       assert(bounds != null),
+       super(mapCtrl: mapCtrl) {
 
-    positionStreamEnabled = positionStreamEnabled ?? true;
+    locationUpdates = locationUpdates ?? true;
       
     onReady.then((_) {
       PositionUtil.getLocation().then((position) {
         updateMarkerFromPosition(position: position);
       });
 
-      if (positionStreamEnabled) {
-        _getPositionStream(positionStream);
+      if (locationUpdates) {
+        _getPositionStream(null);
         _subscribeToPositionStream();
       }
       
@@ -63,15 +63,13 @@ class Controller extends MainController {
 
   bool get mapReady => _mapReady;
 
+  LatLng get userLocation => _userLocation;
+
   /// Custom marker
   static Widget _buildMarker(BuildContext _) => DotMarker();
 
   void _getPositionStream(Stream<Position> stream) {
-    // PositionUtil.getPositionUpdates().then((stream) {
-    //   positionStream = newStream ?? stream;
-    // });
-
-    positionStream = stream ?? PositionUtil.getPositionStream();
+    _positionStream = stream ?? PositionUtil.getPositionStream();
   }
 
   /// Enable or disable autocenter
@@ -88,6 +86,7 @@ class Controller extends MainController {
     if (position == null) return;
   
     LatLng point = LatLng(position.latitude, position.longitude);
+    _userLocation = point;
 
     try {
       await removeMarker(name: "marker");
@@ -103,8 +102,10 @@ class Controller extends MainController {
     );
 
     _marker = marker;
-
-    await addMarker(marker: _marker, name: "marker");
+    
+    if(bounds != null && bounds.contains(point)) {
+      await addMarker(marker: _marker, name: "marker");
+    }
   }
 
   /// Center the map on the marker
@@ -125,9 +126,9 @@ class Controller extends MainController {
   /// Toggle live position stream updates
   void togglePositionStreamSubscription({ Stream<Position> stream }) async {
 
-    positionStreamEnabled = !positionStreamEnabled;
+    locationUpdates = !locationUpdates;
     
-    if (!positionStreamEnabled) {
+    if (!locationUpdates) {
       _positionSubs?.cancel();
     } else {
       _getPositionStream(stream);
@@ -136,15 +137,15 @@ class Controller extends MainController {
 
     notify(
       "positionStream", 
-      positionStreamEnabled,
+      locationUpdates,
       togglePositionStreamSubscription
     );
   }
 
 
   void _subscribeToPositionStream() {
-    if(positionStream != null) {
-      _positionSubs = positionStream.listen((Position position) {
+    if(_positionStream != null) {
+      _positionSubs = _positionStream.listen((Position position) {
         _positionStreamCallbackAction(position);
       });
     }
