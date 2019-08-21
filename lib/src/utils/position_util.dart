@@ -65,8 +65,12 @@ class PositionUtil {
         distanceFilter: distanceFilter
       );
 
-      positionStream = Geolocator().getPositionStream(opts)
-        .asBroadcastStream();
+      Geolocator().checkGeolocationPermissionStatus().then((status) {
+        if(status != GeolocationStatus.granted) {
+          positionStream = Geolocator().getPositionStream(opts)
+          .asBroadcastStream();
+        }
+      });
 
     } catch(e) {
 
