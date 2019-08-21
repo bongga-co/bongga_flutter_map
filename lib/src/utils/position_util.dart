@@ -12,11 +12,13 @@ class PositionUtil {
     final bool isEnabled = await isLocationServicesEnabled();
     
     try {
+
       if(isEnabled) {
         position = await _glocator.getLastKnownPosition(
           desiredAccuracy: LocationAccuracy.high
         );
       }
+
     } catch(e) {
       
     }
@@ -30,13 +32,19 @@ class PositionUtil {
     Stream<Position> stream;
     final isEnabled = await isLocationServicesEnabled();
 
-    if(isEnabled) {
-      final opts = LocationOptions(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: 1,
-      );
+    try {
 
-      stream = _glocator.getPositionStream(opts).asBroadcastStream();
+      if(isEnabled) {
+        final opts = LocationOptions(
+          accuracy: LocationAccuracy.best,
+          distanceFilter: 1,
+        );
+
+        stream = _glocator.getPositionStream(opts).asBroadcastStream();
+      }
+
+    } catch(e) {
+
     }
 
     return stream;
@@ -47,15 +55,23 @@ class PositionUtil {
     int distanceFilter = 1 
   }) {
 
-  final opts = LocationOptions(
-    accuracy: LocationAccuracy.best,
-    timeInterval: timeInterval,
-    distanceFilter: distanceFilter
-  );
+    Stream<Position> positionStream;
 
-  Stream<Position> positionStream = Geolocator().getPositionStream(opts)
-      .asBroadcastStream();
+    try {
+      
+      final opts = LocationOptions(
+        accuracy: LocationAccuracy.best,
+        timeInterval: timeInterval,
+        distanceFilter: distanceFilter
+      );
 
-  return positionStream;
-}
+      positionStream = Geolocator().getPositionStream(opts)
+        .asBroadcastStream();
+
+    } catch(e) {
+
+    }
+
+    return positionStream;
+  }
 }
