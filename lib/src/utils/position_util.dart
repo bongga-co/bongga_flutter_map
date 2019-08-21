@@ -13,7 +13,7 @@ class PositionUtil {
     
     try {
       if(isEnabled) {
-        position = await _glocator.getCurrentPosition(
+        position = await _glocator.getLastKnownPosition(
           desiredAccuracy: LocationAccuracy.high
         );
       }
