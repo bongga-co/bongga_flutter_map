@@ -4,9 +4,6 @@ class PositionUtil {
   static final _glocator = Geolocator();
 
   static Future<bool> isLocationServicesEnabled() async {
-    // final status  = await _glocator.checkGeolocationPermissionStatus();
-    // return (status == GeolocationStatus.granted);
-
     return await _glocator.isLocationServiceEnabled();
   }
 
@@ -14,12 +11,16 @@ class PositionUtil {
     Position position;
     final bool isEnabled = await isLocationServicesEnabled();
     
-    if(isEnabled) {
-      position = await _glocator.getLastKnownPosition(
-        desiredAccuracy: LocationAccuracy.high
-      );
+    try {
+      if(isEnabled) {
+        position = await _glocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high
+        );
+      }
+    } catch(e) {
+      
     }
-
+    
     return position;
   }
 
