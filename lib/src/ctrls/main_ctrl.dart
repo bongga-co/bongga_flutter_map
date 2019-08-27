@@ -27,8 +27,8 @@ class MainController {
   MainController({ @required this.mapCtrl }) : assert(mapCtrl != null) {
 
     _markerState = MarkerState(mapController: mapCtrl, notify: notify);
-    _lineState = LineState(notify: notify);
-    _polygonState = PolygonState(notify: notify);
+    _lineState = LineState(mapController: mapCtrl, notify: notify);
+    _polygonState = PolygonState(mapController: mapCtrl, notify: notify);
 
     _mapState = MapState(
       mapController: mapCtrl,
@@ -133,6 +133,21 @@ class MainController {
     );
   }
 
+  /// Remove a line from the map
+  Future<void> removeLine({@required String name}) async {
+    _lineState.removeLine(name: name);
+  }
+
+  /// Add multiple lines to the map
+  Future<void> addLines({@required Map<String, Polyline> lines}) async {
+     _lineState.addLines(lines: lines);
+  }
+
+  /// Remove multiple lines from the map
+  Future<void> removeLines({@required List<String> names}) async {
+    _lineState.removeLines(names: names);
+  }
+
   /// Add a polygon on the map
   Future<void> addPolygon({
     @required String name,
@@ -148,6 +163,21 @@ class MainController {
       borderWidth: borderWidth,
       borderColor: borderColor
     );
+  }
+
+  /// Remove a polygon from the map
+  Future<void> removePolygon({@required String name}) async {
+    _polygonState.removePolygon(name: name);
+  }
+
+  /// Add multiple polygons to the map
+  Future<void> addPolygons({@required Map<String, Polygon> polygons}) async {
+     _polygonState.addPolygons(polygons: polygons);
+  }
+
+  /// Remove multiple polygons from the map
+  Future<void> removePolygons({@required List<String> names}) async {
+    _polygonState.removePolygons(names: names);
   }
 
   /// Add an image on the map

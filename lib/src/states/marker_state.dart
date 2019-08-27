@@ -7,7 +7,9 @@ class MarkerState {
   MarkerState({
     @required this.mapController, 
     @required this.notify
-  }) : assert(mapController != null);
+  }) : 
+  assert(notify != null),
+  assert(mapController != null);
 
   final MapController mapController;
   final Function notify;
