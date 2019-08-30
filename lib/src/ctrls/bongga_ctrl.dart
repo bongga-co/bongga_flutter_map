@@ -39,6 +39,10 @@ class Controller extends MainController {
        super(mapCtrl: mapCtrl) {
 
     locationUpdates = locationUpdates ?? true;
+
+    if (locationUpdates) {
+      _getPositionStream(null);
+    }
       
     onReady.then((_) {
       PositionUtil.getLocation().then((position) {
@@ -46,7 +50,6 @@ class Controller extends MainController {
       });
 
       if (locationUpdates) {
-        _getPositionStream(null);
         _subscribeToPositionStream();
       }
       
@@ -68,7 +71,7 @@ class Controller extends MainController {
   /// Custom marker
   static Widget _buildMarker(BuildContext _) => DotMarker();
 
-  void _getPositionStream(Stream<Position> stream) {
+  void _getPositionStream(Stream<Position> stream) async {
     _positionStream = stream ?? PositionUtil.getPositionStream();
   }
 
@@ -166,7 +169,7 @@ class Controller extends MainController {
 
   /// Dispose the position stream subscription
   void dispose() {
-    _subject.close();
+    _subject?.close();
     _positionSubs?.cancel();
   }
 }

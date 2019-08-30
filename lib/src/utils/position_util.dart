@@ -50,32 +50,22 @@ class PositionUtil {
     return stream;
   }
 
-  static Stream<Position> getPositionStream({
-    int timeInterval = 3000, 
-    int distanceFilter = 1 
-  }) {
+  static Stream<Position> getPositionStream({ int interval = 3000, int distance }) {
 
-    Stream<Position> positionStream;
+    Geolocator geolocator = Geolocator();
+    LocationOptions options;
 
-    try {
-      
-      final opts = LocationOptions(
-        accuracy: LocationAccuracy.best,
-        timeInterval: timeInterval,
-        distanceFilter: distanceFilter
-      );
-
-      Geolocator().checkGeolocationPermissionStatus().then((status) {
-        if(status != GeolocationStatus.granted) {
-          positionStream = Geolocator().getPositionStream(opts)
-          .asBroadcastStream();
-        }
-      });
-
-    } catch(e) {
-
+    if (distance == null) {
+      options = LocationOptions(
+          accuracy: LocationAccuracy.best, timeInterval: interval);
+    } else {
+      options = LocationOptions(
+          accuracy: LocationAccuracy.best, distanceFilter: distance);
     }
 
-    return positionStream;
+    Stream<Position> stream =
+        geolocator.getPositionStream(options).asBroadcastStream();
+
+    return stream;
   }
 }
