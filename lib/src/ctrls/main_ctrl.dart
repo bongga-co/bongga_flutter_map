@@ -76,8 +76,14 @@ class MainController {
   /// The lines present on the map
   List<Polyline> get lines => _lineState.lines;
 
+  /// The lines present on the map and their names
+  Map<String, Polyline> get namedLines => _lineState.namedLines;
+
   /// The polygons present on the map
   List<Polygon> get polygons => _polygonState.polygons;
+
+  /// The lines present on the map and their names
+  Map<String, Polygon> get namedPolygons => _polygonState.namedPolygons;
 
   /// Zoom in one level
   Future<void> zoomIn() => _mapState.zoomIn();
