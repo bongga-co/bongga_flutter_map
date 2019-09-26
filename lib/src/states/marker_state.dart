@@ -100,12 +100,17 @@ class MarkerState {
   /// Remove a marker from the map
   Future<void> updateMarker({ 
     @required String name, 
-    @required Marker marker 
+    @required LatLng position 
   }) async {
     if (name == null) throw ArgumentError("name must not be null");
     
     try {
-      final res = _namedMarkers[name] = marker;
+      final res = _namedMarkers[name] = Marker(
+        builder: _namedMarkers[name].builder,
+        height: _namedMarkers[name].height,
+        width: _namedMarkers[name].width,
+        point: position        
+      );
 
       if (res == null) {
         throw ("Marker $name not found in map");

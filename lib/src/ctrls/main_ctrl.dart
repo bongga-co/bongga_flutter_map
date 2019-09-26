@@ -125,9 +125,9 @@ class MainController {
   /// Remove multiple makers from the map
   Future<void> updateMarker({
     @required String name, 
-    @required Marker marker 
+    @required LatLng position 
   }) async {
-    _markerState.updateMarker(name: name, marker: marker);
+    _markerState.updateMarker(name: name, position: position);
   }
       
   /// Add a line on the map
