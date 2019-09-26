@@ -121,6 +121,14 @@ class MainController {
   Future<void> removeMarkers({@required List<String> names}) async {
     _markerState.removeMarkers(names: names);
   }
+
+  /// Remove multiple makers from the map
+  Future<void> updateMarker({
+    @required String name, 
+    @required Marker marker 
+  }) async {
+    _markerState.updateMarker(name: name, marker: marker);
+  }
       
   /// Add a line on the map
   Future<void> addLine({ 

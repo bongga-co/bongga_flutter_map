@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:bongga_flutter_map/bongga_flutter_map.dart';
 
 class MarkerState {
 
@@ -94,6 +95,32 @@ class MarkerState {
 
     _buildMarkers();
     notify("updateMarkers", _markers, removeMarkers);
+  }
+
+  /// Remove a marker from the map
+  Future<void> updateMarker({ 
+    @required String name, 
+    @required Marker marker 
+  }) async {
+    if (name == null) throw ArgumentError("name must not be null");
+    
+    try {
+      final res = _namedMarkers[name] = marker;
+
+      if (res == null) {
+        throw ("Marker $name not found in map");
+      }
+    } catch (e) {
+      //throw ("Can not remove marker: $e");
+    }
+
+    try {
+      _buildMarkers();
+    } catch (e) {
+      throw ("Can not build for remove marker: $e");
+    }
+    
+    notify("updateMarkers", _markers, updateMarker);
   }
 
   void _buildMarkers() {
