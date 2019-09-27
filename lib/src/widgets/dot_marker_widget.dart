@@ -7,7 +7,7 @@ class DotMarker extends StatelessWidget {
   final double borderWidth;
 
   DotMarker({ 
-    this.color = Colors.orange, 
+    this.color = Colors.blue, 
     this.size = 10.0,
     this.borderWidth = 1.0,
     Key key 
