@@ -16,7 +16,7 @@ dependencies:
       url: https://github.com/bongga-co/flutter_map.git
 
   rxdart: 0.22.2
-  geolocator: 5.1.1+1
+  geolocator: 5.1.3
 
 dev_dependencies:
   flutter_test:
