@@ -5,7 +5,7 @@ author: Bongga
 homepage: https://bongga.co
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -15,8 +15,8 @@ dependencies:
     git:
       url: https://github.com/bongga-co/flutter_map.git
 
-  rxdart: ^0.22.1
-  geolocator: ^5.1.1+1
+  rxdart: 0.22.1
+  geolocator: 5.1.1+1
 
 dev_dependencies:
   flutter_test:

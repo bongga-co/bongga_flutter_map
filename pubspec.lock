@@ -117,7 +117,7 @@ packages:
       name: geolocator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.2.1"
+    version: "5.1.1+1"
   google_api_availability:
     dependency: transitive
     description:
@@ -243,7 +243,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.22.6"
+    version: "0.22.1"
   sky_engine:
     dependency: transitive
     description: flutter
