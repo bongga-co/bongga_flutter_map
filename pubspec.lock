@@ -42,7 +42,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.0-rc"
   charcode:
     dependency: transitive
     description:
@@ -102,7 +102,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "89f8cde970dd351fb3f1027d52225c519eacf974"
+      resolved-ref: "8f3e4f44d330509547c316e9cf42fb99261d3372"
       url: "https://github.com/bongga-co/flutter_map.git"
     source: git
     version: "0.8.2"
@@ -201,7 +201,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.0"
+    version: "1.5.1"
   pedantic:
     dependency: transitive
     description:
@@ -229,7 +229,7 @@ packages:
       name: positioned_tap_detector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.2"
   quiver:
     dependency: transitive
     description:
@@ -262,7 +262,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.1.5"
   stack_trace:
     dependency: transitive
     description:
@@ -318,7 +318,7 @@ packages:
       name: tuple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.2"
   typed_data:
     dependency: transitive
     description:
