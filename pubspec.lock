@@ -135,9 +135,11 @@ packages:
   flutter_map:
     dependency: "direct main"
     description:
-      path: "../flutter_map"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "39bee7543ff7e89f7ed6ba61ad702a2099967b4a"
+      url: "https://github.com/bongga-co/flutter_map.git"
+    source: git
     version: "0.8.2"
   flutter_test:
     dependency: "direct dev"

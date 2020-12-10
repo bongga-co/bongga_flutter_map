@@ -12,12 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # flutter_map: 
-  #   git:
-  #     url: https://github.com/bongga-co/flutter_map.git
   flutter_map: 
-    path: ../flutter_map
-      
+    git:
+      url: https://github.com/bongga-co/flutter_map.git
 
   rxdart: ^0.23.1
   geolocator: ^5.1.3
