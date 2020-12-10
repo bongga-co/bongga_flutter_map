@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx;
 import 'package:bongga_flutter_map/src/states/polygon_state.dart';
 import 'package:bongga_flutter_map/src/states/marker_state.dart';
 import 'package:bongga_flutter_map/src/states/line_state.dart';
@@ -15,7 +15,7 @@ import 'package:bongga_flutter_map/src/states/overlay_image_state.dart';
 class MainController {
   final MapController mapCtrl;
   final Completer<Null> _completer = Completer<Null>();
-  final _subject = PublishSubject<MainControllerChange>();
+  final _subject = rx.PublishSubject<MainControllerChange>();
 
   MapOptions mapOpts;
   MapState _mapState;
@@ -24,17 +24,13 @@ class MainController {
   PolygonState _polygonState;
   OverlayImageState _overlayImageState;
 
-  MainController({ @required this.mapCtrl }) : assert(mapCtrl != null) {
-
+  MainController({@required this.mapCtrl}) : assert(mapCtrl != null) {
     _markerState = MarkerState(mapController: mapCtrl, notify: notify);
     _lineState = LineState(mapController: mapCtrl, notify: notify);
     _polygonState = PolygonState(mapController: mapCtrl, notify: notify);
 
     _mapState = MapState(
-      mapController: mapCtrl,
-      notify: notify,
-      markerState: _markerState
-    );
+        mapController: mapCtrl, notify: notify, markerState: _markerState);
 
     _overlayImageState = OverlayImageState(
       mapController: mapCtrl,
@@ -53,7 +49,7 @@ class MainController {
   Future<Null> get onReady => _completer.future;
 
   /// A stream with changes occuring on the map
-  Observable<MainControllerChange> get changes => _subject.distinct();
+  rx.BehaviorSubject<MainControllerChange> get changes => _subject.distinct();
 
   /// The map zoom value
   double get zoom => mapCtrl.zoom;
@@ -101,20 +97,21 @@ class MainController {
   /*void onPositionChanged(MapPosition pos, bool gesture) {
     _mapState.onPositionChanged(pos, gesture);
   }*/
-    
+
   /// Add a marker on the map
-  Future<void> addMarker({ @required Marker marker, @required String name }) async {
+  Future<void> addMarker(
+      {@required Marker marker, @required String name}) async {
     _markerState.addMarker(marker: marker, name: name);
   }
-    
+
   /// Remove a marker from the map
   Future<void> removeMarker({@required String name}) async {
     _markerState.removeMarker(name: name);
   }
-      
+
   /// Add multiple markers to the map
   Future<void> addMarkers({@required Map<String, Marker> markers}) async {
-     _markerState.addMarkers(markers: markers);
+    _markerState.addMarkers(markers: markers);
   }
 
   /// Remove multiple makers from the map
@@ -123,28 +120,24 @@ class MainController {
   }
 
   /// Remove multiple makers from the map
-  Future<void> updateMarker({
-    @required String name, 
-    @required LatLng position 
-  }) async {
+  Future<void> updateMarker(
+      {@required String name, @required LatLng position}) async {
     _markerState.updateMarker(name: name, position: position);
   }
-      
+
   /// Add a line on the map
-  Future<void> addLine({ 
-    @required String name,
-    @required List<LatLng> points,
-    double width = 1.0,
-    Color color = Colors.green,
-    bool isDotted = false
-  }) async {
+  Future<void> addLine(
+      {@required String name,
+      @required List<LatLng> points,
+      double width = 1.0,
+      Color color = Colors.green,
+      bool isDotted = false}) async {
     _lineState.addLine(
-      name: name,
-      points: points,
-      color: color,
-      width: width,
-      isDotted: isDotted
-    );
+        name: name,
+        points: points,
+        color: color,
+        width: width,
+        isDotted: isDotted);
   }
 
   /// Remove a line from the map
@@ -154,7 +147,7 @@ class MainController {
 
   /// Add multiple lines to the map
   Future<void> addLines({@required Map<String, Polyline> lines}) async {
-     _lineState.addLines(lines: lines);
+    _lineState.addLines(lines: lines);
   }
 
   /// Remove multiple lines from the map
@@ -163,20 +156,18 @@ class MainController {
   }
 
   /// Add a polygon on the map
-  Future<void> addPolygon({
-    @required String name,
-    @required List<LatLng> points,
-    Color color = const Color(0xFF00FF00),
-    double borderWidth = 0.0,
-    Color borderColor = const Color(0xFFFFFF00)
-  }) async {
+  Future<void> addPolygon(
+      {@required String name,
+      @required List<LatLng> points,
+      Color color = const Color(0xFF00FF00),
+      double borderWidth = 0.0,
+      Color borderColor = const Color(0xFFFFFF00)}) async {
     _polygonState.addPolygon(
-      name: name,
-      points: points,
-      color: color,
-      borderWidth: borderWidth,
-      borderColor: borderColor
-    );
+        name: name,
+        points: points,
+        color: color,
+        borderWidth: borderWidth,
+        borderColor: borderColor);
   }
 
   /// Remove a polygon from the map
@@ -186,7 +177,7 @@ class MainController {
 
   /// Add multiple polygons to the map
   Future<void> addPolygons({@required Map<String, Polygon> polygons}) async {
-     _polygonState.addPolygons(polygons: polygons);
+    _polygonState.addPolygons(polygons: polygons);
   }
 
   /// Remove multiple polygons from the map
@@ -195,36 +186,30 @@ class MainController {
   }
 
   /// Add an image on the map
-  Future<void> addImage({ 
-    @required OverlayImage image, 
-    @required String name 
-  }) async {
+  Future<void> addImage(
+      {@required OverlayImage image, @required String name}) async {
     _overlayImageState.addImage(image: image, name: name);
   }
-    
+
   /// Remove an image from the map
-  Future<void> removeImage({ @required String name }) async {
+  Future<void> removeImage({@required String name}) async {
     _overlayImageState.removeImage(name: name);
   }
-      
+
   /// Add multiple images to the map
-  Future<void> addImages({ @required Map<String, OverlayImage> images }) async {
-     _overlayImageState.addImages(images: images);
+  Future<void> addImages({@required Map<String, OverlayImage> images}) async {
+    _overlayImageState.addImages(images: images);
   }
 
   /// Remove multiple images from the map
   Future<void> removeImages({@required List<String> names}) async {
     _overlayImageState.removeImages(names: names);
   }
-    
+
   /// Notify to the stream
   void notify(String name, dynamic value, Function from) {
-    final change = MainControllerChange(
-      name: name, 
-      value: value, 
-      from: from
-    );
-    
+    final change = MainControllerChange(name: name, value: value, from: from);
+
     _subject.add(change);
   }
 }
