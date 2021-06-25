@@ -49,7 +49,7 @@ class MainController {
   Future<Null> get onReady => _completer.future;
 
   /// A stream with changes occuring on the map
-  rx.BehaviorSubject<MainControllerChange> get changes => _subject.distinct();
+  Stream<MainControllerChange> get changes => _subject.distinct();
 
   /// The map zoom value
   double get zoom => mapCtrl.zoom;
