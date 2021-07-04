@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:bongga_flutter_map/bongga_flutter_map.dart';
 
@@ -15,9 +16,9 @@ class MarkerState {
 
   Map<String, Marker> get namedMarkers => _namedMarkers;
 
-  Future<void> addMarker({required Marker marker, required String name}) async {
+  Future<void> addMarker({Marker? marker, required String name}) async {
     try {
-      _namedMarkers[name] = marker;
+      if (marker != null) _namedMarkers[name] = marker;
     } catch (e) {
       throw Exception('Can not add marker: $e');
     }
