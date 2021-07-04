@@ -101,7 +101,7 @@ class MainController {
   }*/
 
   /// Add a marker on the map
-  Future<void> addMarker({Marker? marker, required String name}) async {
+  Future<void> addMarker({required Marker marker, required String name}) async {
     await _markerState.addMarker(marker: marker, name: name);
   }
 

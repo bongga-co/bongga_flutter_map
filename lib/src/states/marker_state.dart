@@ -16,9 +16,9 @@ class MarkerState {
 
   Map<String, Marker> get namedMarkers => _namedMarkers;
 
-  Future<void> addMarker({Marker? marker, required String name}) async {
+  Future<void> addMarker({required Marker marker, required String name}) async {
     try {
-      if (marker != null) _namedMarkers[name] = marker;
+      _namedMarkers[name] = marker;
     } catch (e) {
       throw Exception('Can not add marker: $e');
     }
