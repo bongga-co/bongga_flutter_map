@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
 class RadarPainter extends CustomPainter {
-
-  final double width;
-  final double radius;
-  final Color color;
-
-  RadarPainter({ 
+  RadarPainter({
+    required this.radius,
     this.width = 3,
-    this.radius, 
-    this.color = const Color.fromRGBO(70, 70, 70, 1.0) 
+    this.color = const Color.fromRGBO(70, 70, 70, 1.0),
   });
+
+  final double radius;
+  final double width;
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -25,24 +24,17 @@ class RadarPainter extends CustomPainter {
       ..color = color;
 
     final center = Offset(size.width * .5, size.height * .5);
-    canvas.drawCircle(center, radius, circle);
-
-    canvas.drawLine(
-      Offset(center.dx, center.dy - radius), 
-      Offset(center.dx, center.dy + radius), 
-      line
-    );
-
-    canvas.drawLine(
-      Offset(center.dx - radius, center.dy), 
-      Offset(center.dx + radius, center.dy), 
-      line
-    );
+    canvas
+      ..drawCircle(center, radius, circle)
+      ..drawLine(Offset(center.dx, center.dy - radius),
+          Offset(center.dx, center.dy + radius), line)
+      ..drawLine(Offset(center.dx - radius, center.dy),
+          Offset(center.dx + radius, center.dy), line);
   }
 
   @override
-  bool shouldRepaint(RadarPainter oldDelegate) => false;
+  bool shouldRepaint(covariant RadarPainter oldDelegate) => false;
 
   @override
-  bool shouldRebuildSemantics(RadarPainter oldDelegate) => false;
+  bool shouldRebuildSemantics(covariant RadarPainter oldDelegate) => false;
 }

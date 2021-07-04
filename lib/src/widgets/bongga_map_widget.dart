@@ -3,18 +3,18 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:bongga_flutter_map/bongga_flutter_map.dart';
 
 class BonggaMap extends StatefulWidget {
+  const BonggaMap({
+    Key? key,
+    required this.controller,
+    required this.options,
+    this.layers = const <LayerOptions>[],
+    this.hasRadar = false,
+  }) : super(key: key);
 
-  final bool hasRadar;
+  final Controller controller;
   final MapOptions options;
   final List<LayerOptions> layers;
-  final Controller controller;
-
-  BonggaMap({
-    this.hasRadar,
-    this.options,
-    this.layers,
-    @required this.controller
-  });
+  final bool hasRadar;
 
   @override
   _BonggaMapState createState() => _BonggaMapState();
@@ -30,7 +30,7 @@ class _BonggaMapState extends State<BonggaMap> {
           options: widget.options,
           layers: widget.layers,
         ),
-        Container(child: widget.hasRadar ? Radar() : null),
+        Container(child: widget.hasRadar ? const Radar() : null),
       ],
     );
   }

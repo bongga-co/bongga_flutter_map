@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 import 'package:bongga_flutter_map/src/states/polygon_state.dart';
 import 'package:bongga_flutter_map/src/states/marker_state.dart';
@@ -13,24 +12,16 @@ import 'package:bongga_flutter_map/src/models/main_ctrl_model.dart';
 import 'package:bongga_flutter_map/src/states/overlay_image_state.dart';
 
 class MainController {
-  final MapController mapCtrl;
-  final Completer<Null> _completer = Completer<Null>();
-  final _subject = rx.PublishSubject<MainControllerChange>();
-
-  MapOptions mapOpts;
-  MapState _mapState;
-  MarkerState _markerState;
-  LineState _lineState;
-  PolygonState _polygonState;
-  OverlayImageState _overlayImageState;
-
-  MainController({@required this.mapCtrl}) : assert(mapCtrl != null) {
+  MainController({required this.mapCtrl}) {
     _markerState = MarkerState(mapController: mapCtrl, notify: notify);
     _lineState = LineState(mapController: mapCtrl, notify: notify);
     _polygonState = PolygonState(mapController: mapCtrl, notify: notify);
 
     _mapState = MapState(
-        mapController: mapCtrl, notify: notify, markerState: _markerState);
+      mapController: mapCtrl,
+      notify: notify,
+      markerState: _markerState,
+    );
 
     _overlayImageState = OverlayImageState(
       mapController: mapCtrl,
@@ -44,6 +35,17 @@ class MainController {
       }
     });
   }
+
+  final MapController mapCtrl;
+  final Completer<Null> _completer = Completer<Null>();
+  final _subject = rx.PublishSubject<MainControllerChange>();
+
+  // late MapOptions _mapOpts;
+  late MapState _mapState;
+  late MarkerState _markerState;
+  late LineState _lineState;
+  late PolygonState _polygonState;
+  late OverlayImageState _overlayImageState;
 
   /// On ready callback: this is fired when the contoller is ready
   Future<Null> get onReady => _completer.future;
@@ -99,111 +101,118 @@ class MainController {
   }*/
 
   /// Add a marker on the map
-  Future<void> addMarker(
-      {@required Marker marker, @required String name}) async {
-    _markerState.addMarker(marker: marker, name: name);
+  Future<void> addMarker({required Marker marker, required String name}) async {
+    await _markerState.addMarker(marker: marker, name: name);
   }
 
   /// Remove a marker from the map
-  Future<void> removeMarker({@required String name}) async {
-    _markerState.removeMarker(name: name);
+  Future<void> removeMarker({required String name}) async {
+    await _markerState.removeMarker(name: name);
   }
 
   /// Add multiple markers to the map
-  Future<void> addMarkers({@required Map<String, Marker> markers}) async {
-    _markerState.addMarkers(markers: markers);
+  Future<void> addMarkers({required Map<String, Marker> markers}) async {
+    await _markerState.addMarkers(markers: markers);
   }
 
   /// Remove multiple makers from the map
-  Future<void> removeMarkers({@required List<String> names}) async {
-    _markerState.removeMarkers(names: names);
+  Future<void> removeMarkers({required List<String> names}) async {
+    await _markerState.removeMarkers(names: names);
   }
 
   /// Remove multiple makers from the map
-  Future<void> updateMarker(
-      {@required String name, @required LatLng position}) async {
-    _markerState.updateMarker(name: name, position: position);
+  Future<void> updateMarker({
+    required String name,
+    required LatLng position,
+  }) async {
+    await _markerState.updateMarker(name: name, position: position);
   }
 
   /// Add a line on the map
-  Future<void> addLine(
-      {@required String name,
-      @required List<LatLng> points,
-      double width = 1.0,
-      Color color = Colors.green,
-      bool isDotted = false}) async {
-    _lineState.addLine(
-        name: name,
-        points: points,
-        color: color,
-        width: width,
-        isDotted: isDotted);
+  Future<void> addLine({
+    required String name,
+    required List<LatLng> points,
+    double width = 1.0,
+    Color color = Colors.green,
+    bool isDotted = false,
+  }) async {
+    await _lineState.addLine(
+      name: name,
+      points: points,
+      color: color,
+      width: width,
+      isDotted: isDotted,
+    );
   }
 
   /// Remove a line from the map
-  Future<void> removeLine({@required String name}) async {
-    _lineState.removeLine(name: name);
+  Future<void> removeLine({required String name}) async {
+    await _lineState.removeLine(name: name);
   }
 
   /// Add multiple lines to the map
-  Future<void> addLines({@required Map<String, Polyline> lines}) async {
-    _lineState.addLines(lines: lines);
+  Future<void> addLines({required Map<String, Polyline> lines}) async {
+    await _lineState.addLines(lines: lines);
   }
 
   /// Remove multiple lines from the map
-  Future<void> removeLines({@required List<String> names}) async {
-    _lineState.removeLines(names: names);
+  Future<void> removeLines({required List<String> names}) async {
+    await _lineState.removeLines(names: names);
   }
 
   /// Add a polygon on the map
-  Future<void> addPolygon(
-      {@required String name,
-      @required List<LatLng> points,
-      Color color = const Color(0xFF00FF00),
-      double borderWidth = 0.0,
-      Color borderColor = const Color(0xFFFFFF00)}) async {
-    _polygonState.addPolygon(
-        name: name,
-        points: points,
-        color: color,
-        borderWidth: borderWidth,
-        borderColor: borderColor);
+  Future<void> addPolygon({
+    required String name,
+    required List<LatLng> points,
+    Color color = const Color(0xFF00FF00),
+    double borderWidth = 0.0,
+    Color borderColor = const Color(0xFFFFFF00),
+  }) async {
+    await _polygonState.addPolygon(
+      name: name,
+      points: points,
+      color: color,
+      borderWidth: borderWidth,
+      borderColor: borderColor,
+    );
   }
 
   /// Remove a polygon from the map
-  Future<void> removePolygon({@required String name}) async {
-    _polygonState.removePolygon(name: name);
+  Future<void> removePolygon({required String name}) async {
+    await _polygonState.removePolygon(name: name);
   }
 
   /// Add multiple polygons to the map
-  Future<void> addPolygons({@required Map<String, Polygon> polygons}) async {
-    _polygonState.addPolygons(polygons: polygons);
+  Future<void> addPolygons({required Map<String, Polygon> polygons}) async {
+    await _polygonState.addPolygons(polygons: polygons);
   }
 
   /// Remove multiple polygons from the map
-  Future<void> removePolygons({@required List<String> names}) async {
-    _polygonState.removePolygons(names: names);
+  Future<void> removePolygons({required List<String> names}) async {
+    await _polygonState.removePolygons(names: names);
   }
 
   /// Add an image on the map
-  Future<void> addImage(
-      {@required OverlayImage image, @required String name}) async {
-    _overlayImageState.addImage(image: image, name: name);
+  Future<void> addImage({
+    required OverlayImage image,
+    required String name,
+  }) async {
+    await _overlayImageState.addImage(image: image, name: name);
   }
 
   /// Remove an image from the map
-  Future<void> removeImage({@required String name}) async {
-    _overlayImageState.removeImage(name: name);
+  Future<void> removeImage({required String name}) async {
+    await _overlayImageState.removeImage(name: name);
   }
 
   /// Add multiple images to the map
-  Future<void> addImages({@required Map<String, OverlayImage> images}) async {
-    _overlayImageState.addImages(images: images);
+  Future<void> addImages({required Map<String, OverlayImage> images}) async {
+    await _overlayImageState.addImages(images: images);
   }
 
   /// Remove multiple images from the map
-  Future<void> removeImages({@required List<String> names}) async {
-    _overlayImageState.removeImages(names: names);
+  Future<void> removeImages({required List<String> names}) async {
+    await _overlayImageState.removeImages(names: names);
   }
 
   /// Notify to the stream

@@ -1,20 +1,11 @@
-import 'package:flutter/foundation.dart';
-
 /// Desctiption of a state change
 class MainControllerChange {
-
-  MainControllerChange({ 
-    @required this.name, 
-    @required this.value, 
-    this.from
-  }) : assert(name != null);
+  MainControllerChange({required this.name, required this.value, this.from});
 
   final String name;
   final dynamic value;
-  final Function from;
+  final Function? from;
 
   @override
-  String toString() {
-    return "${this.name} ${this.value} from ${this.from}";
-  }
+  String toString() => '$name $value from $from';
 }

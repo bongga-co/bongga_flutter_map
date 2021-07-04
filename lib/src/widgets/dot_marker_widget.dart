@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
 class DotMarker extends StatelessWidget {
+  const DotMarker({
+    Key? key,
+    this.color = Colors.blue,
+    this.size = 10,
+    this.borderWidth = 1,
+  }) : super(key: key);
 
   final Color color;
   final double size;
   final double borderWidth;
-
-  DotMarker({ 
-    this.color = Colors.blue, 
-    this.size = 10.0,
-    this.borderWidth = 1.0,
-    Key key 
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 import 'package:bongga_flutter_map/src/utils/position_util.dart';
 import 'package:bongga_flutter_map/src/widgets/dot_marker_widget.dart';
@@ -11,31 +11,14 @@ import 'package:bongga_flutter_map/src/models/main_ctrl_model.dart';
 import 'package:bongga_flutter_map/src/ctrls/main_ctrl.dart';
 
 class Controller extends MainController {
-  final Completer<Null> _completer = Completer<Null>();
-  final _subject = rx.PublishSubject<MainControllerChange>();
-
-  bool locationUpdates;
-  bool autoCenter = false;
-  LatLngBounds bounds;
-
-  LatLng _userLocation;
-  Stream<Position> _positionStream;
-  StreamSubscription<Position> _positionSubs;
-  bool _mapReady = false;
-  Marker _marker = Marker(
-      width: 10.0,
-      height: 10.0,
-      point: LatLng(0.0, 0.0),
-      builder: _buildMarker);
-
-  Controller(
-      {@required this.mapCtrl, @required this.bounds, this.locationUpdates})
-      : assert(mapCtrl != null),
-        assert(bounds != null),
-        super(mapCtrl: mapCtrl) {
+  Controller({
+    required mapCtrl,
+    required this.bounds,
+    this.locationUpdates,
+  }) : super(mapCtrl: mapCtrl) {
     locationUpdates = locationUpdates ?? true;
 
-    if (locationUpdates) {
+    if (locationUpdates!) {
       _getPositionStream(null);
     }
 
@@ -44,58 +27,80 @@ class Controller extends MainController {
         updateMarkerFromPosition(position: position);
       });
 
-      if (locationUpdates) {
+      if (locationUpdates!) {
         _subscribeToPositionStream();
       }
 
       if (!_completer.isCompleted) {
         _completer.complete();
-
         _mapReady = true;
       }
     });
   }
 
-  @override
-  MapController mapCtrl;
+  bool? locationUpdates;
+  final LatLngBounds bounds;
+
+  final Completer<Null> _completer = Completer<Null>();
+  final _subject = rx.PublishSubject<MainControllerChange>();
+
+  late LatLng _userLocation;
+  late Stream<Position>? _positionStream;
+  late StreamSubscription<Position>? _positionSubs;
+
+  bool _autoCenter = false;
+  bool _mapReady = false;
+
+  Marker _marker = Marker(
+    width: 10,
+    height: 10,
+    point: LatLng(0, 0),
+    builder: _buildMarker,
+  );
 
   bool get mapReady => _mapReady;
 
   LatLng get userLocation => _userLocation;
 
   /// Custom marker
-  static Widget _buildMarker(BuildContext _) => DotMarker();
+  static Widget _buildMarker(BuildContext _) => const DotMarker();
 
-  void _getPositionStream(Stream<Position> stream) async {
+  void _getPositionStream(Stream<Position>? stream) async {
     _positionStream = stream ?? PositionUtil.getPositionStream();
   }
 
   /// Enable or disable autocenter
   Future<void> toggleAutoCenter() async {
-    autoCenter = !autoCenter;
-    if (autoCenter) centerMarker();
+    _autoCenter = !_autoCenter;
+    if (_autoCenter) await centerMarker();
 
-    notify("toggleAutoCenter", autoCenter, toggleAutoCenter);
+    notify('toggleAutoCenter', _autoCenter, toggleAutoCenter);
   }
 
   /// Updates the marker on the map from a position
-  Future<void> updateMarkerFromPosition({@required Position position}) async {
+  Future<void> updateMarkerFromPosition({required Position? position}) async {
     if (position == null) return;
 
-    LatLng point = LatLng(position.latitude, position.longitude);
+    final point = LatLng(position.latitude, position.longitude);
     _userLocation = point;
 
     try {
-      await removeMarker(name: "marker");
-    } catch (e) {}
+      await removeMarker(name: 'marker');
+    } catch (e) {
+      print(e);
+    }
 
-    final marker =
-        Marker(width: 10.0, height: 10.0, point: point, builder: _buildMarker);
+    final marker = Marker(
+      width: 10,
+      height: 10,
+      point: point,
+      builder: _buildMarker,
+    );
 
     _marker = marker;
 
-    if (bounds != null && bounds.contains(point)) {
-      await addMarker(marker: _marker, name: "marker");
+    if (bounds.contains(point)) {
+      await addMarker(marker: _marker, name: 'marker');
     }
   }
 
@@ -106,49 +111,49 @@ class Controller extends MainController {
 
   /// Center the map on a [Position]
   Future<void> centerOnPosition(Position position) async {
-    LatLng _newCenter = LatLng(position.latitude, position.longitude);
+    final newCenter = LatLng(position.latitude, position.longitude);
 
-    mapCtrl.move(_newCenter, mapCtrl.zoom);
-    centerOnPoint(_newCenter);
+    mapCtrl.move(newCenter, mapCtrl.zoom);
+    await centerOnPoint(newCenter);
 
-    notify("center", _newCenter, centerOnPosition);
+    notify('center', newCenter, centerOnPosition);
   }
 
   /// Toggle live position stream updates
-  void togglePositionStreamSubscription({Stream<Position> stream}) async {
-    locationUpdates = !locationUpdates;
+  void togglePositionStreamSubscription({Stream<Position>? stream}) async {
+    locationUpdates = !locationUpdates!;
 
-    if (!locationUpdates) {
-      _positionSubs?.cancel();
+    if (!locationUpdates!) {
+      await _positionSubs?.cancel();
     } else {
       _getPositionStream(stream);
       _subscribeToPositionStream();
     }
 
-    notify("positionStream", locationUpdates, togglePositionStreamSubscription);
+    notify('positionStream', locationUpdates, togglePositionStreamSubscription);
   }
 
   void _subscribeToPositionStream() {
     if (_positionStream != null) {
-      _positionSubs = _positionStream.listen((Position position) {
-        _positionStreamCallbackAction(position);
-      });
+      _positionSubs = _positionStream!.listen(_positionStreamCallbackAction);
     }
   }
 
   /// Process the position stream position
   void _positionStreamCallbackAction(Position position) {
     updateMarkerFromPosition(position: position);
+    if (_autoCenter) centerOnPosition(position);
 
-    if (autoCenter) centerOnPosition(position);
-
-    notify("currentPosition", LatLng(position.latitude, position.longitude),
-        _positionStreamCallbackAction);
+    notify(
+      'currentPosition',
+      LatLng(position.latitude, position.longitude),
+      _positionStreamCallbackAction,
+    );
   }
 
   /// Dispose the position stream subscription
   void dispose() {
-    _subject?.close();
+    _subject.close();
     _positionSubs?.cancel();
   }
 }

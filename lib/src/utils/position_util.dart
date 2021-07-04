@@ -1,71 +1,59 @@
 import 'package:geolocator/geolocator.dart';
 
 class PositionUtil {
-  static final _glocator = Geolocator();
+  static final _geoLocator = GeolocatorPlatform.instance;
 
   static Future<bool> isLocationServicesEnabled() async {
-    return await _glocator.isLocationServiceEnabled();
+    return await _geoLocator.isLocationServiceEnabled();
   }
 
-  static Future<Position> getLocation() async {
-    Position position;
-    final bool isEnabled = await isLocationServicesEnabled();
-    
-    try {
+  static Future<Position?> getLocation() async {
+    final isEnabled = await isLocationServicesEnabled();
+    Position? position;
 
-      if(isEnabled) {
-        position = await _glocator.getLastKnownPosition(
-          desiredAccuracy: LocationAccuracy.high
+    try {
+      if (isEnabled) {
+        position = await _geoLocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
         );
       }
-
-    } catch(e) {
-      
+    } catch (e) {
+      print(e);
     }
-    
+
     return position;
   }
 
   /// Initialize the position stream
-  static Future<Stream<Position>> getPositionUpdates() async {
-
-    Stream<Position> stream;
+  static Future<Stream<Position>?> getPositionUpdates() async {
     final isEnabled = await isLocationServicesEnabled();
+    Stream<Position>? stream;
 
     try {
-
-      if(isEnabled) {
-        final opts = LocationOptions(
-          accuracy: LocationAccuracy.best,
-          distanceFilter: 1,
-        );
-
-        stream = _glocator.getPositionStream(opts).asBroadcastStream();
+      if (isEnabled) {
+        stream = _geoLocator
+            .getPositionStream(
+              desiredAccuracy: LocationAccuracy.best,
+              distanceFilter: 1,
+            )
+            .asBroadcastStream();
       }
-
-    } catch(e) {
-
+    } catch (e) {
+      print(e);
     }
 
     return stream;
   }
 
-  static Stream<Position> getPositionStream({ int interval = 3000, int distance }) {
+  static Stream<Position> getPositionStream({int interval = 3000, int? dist}) {
+    final geoLocator = GeolocatorPlatform.instance;
 
-    Geolocator geolocator = Geolocator();
-    LocationOptions options;
-
-    if (distance == null) {
-      options = LocationOptions(
-          accuracy: LocationAccuracy.best, timeInterval: interval);
-    } else {
-      options = LocationOptions(
-          accuracy: LocationAccuracy.best, distanceFilter: distance);
-    }
-
-    Stream<Position> stream =
-        geolocator.getPositionStream(options).asBroadcastStream();
-
-    return stream;
+    return geoLocator
+        .getPositionStream(
+          desiredAccuracy: LocationAccuracy.best,
+          distanceFilter: dist ?? 0,
+          timeInterval: dist != null ? interval : 0,
+        )
+        .asBroadcastStream();
   }
 }
