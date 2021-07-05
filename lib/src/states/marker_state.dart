@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:bongga_flutter_map/bongga_flutter_map.dart';
 
@@ -84,10 +83,6 @@ class MarkerState {
         width: _namedMarkers[name]!.width,
         point: position,
       );
-
-      // if (res == null) {
-      //   throw ("Marker $name not found in map");
-      // }
     } catch (e) {
       //throw ("Can not remove marker: $e");
     }

@@ -40,7 +40,6 @@ class MainController {
   final Completer<Null> _completer = Completer<Null>();
   final _subject = rx.PublishSubject<MainControllerChange>();
 
-  // late MapOptions _mapOpts;
   late MapState _mapState;
   late MarkerState _markerState;
   late LineState _lineState;
