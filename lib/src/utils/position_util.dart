@@ -4,7 +4,7 @@ class PositionUtil {
   static final _geoLocator = GeolocatorPlatform.instance;
 
   static Future<bool> isLocationServicesEnabled() async {
-    return await _geoLocator.isLocationServiceEnabled();
+    return _geoLocator.isLocationServiceEnabled();
   }
 
   static Future<Position?> getLocation() async {
@@ -14,7 +14,9 @@ class PositionUtil {
     try {
       if (isEnabled) {
         position = await _geoLocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+          ),
         );
       }
     } catch (e) {
@@ -33,8 +35,7 @@ class PositionUtil {
       if (isEnabled) {
         stream = _geoLocator
             .getPositionStream(
-              desiredAccuracy: LocationAccuracy.best,
-              distanceFilter: 1,
+              locationSettings: const LocationSettings(distanceFilter: 1),
             )
             .asBroadcastStream();
       }
@@ -50,9 +51,10 @@ class PositionUtil {
 
     return geoLocator
         .getPositionStream(
-          desiredAccuracy: LocationAccuracy.best,
-          distanceFilter: dist ?? 0,
-          timeInterval: dist != null ? interval : 0,
+          locationSettings: LocationSettings(
+            distanceFilter: dist ?? 0,
+            timeLimit: Duration(milliseconds: dist != null ? interval : 0),
+          ),
         )
         .asBroadcastStream();
   }
