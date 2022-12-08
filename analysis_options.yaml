@@ -4,5 +4,6 @@ linter:
   rules:
     avoid_dynamic_calls: false
     avoid_print: false
+    library_private_types_in_public_api: false
     public_member_api_docs: false
     prefer_void_to_null: false
