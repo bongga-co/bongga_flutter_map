@@ -72,8 +72,8 @@ class OverlayImageState {
   }
 
   void _buildImages() {
-    var listImages = <OverlayImage>[];
-    for (var k in _namedImages.keys) {
+    final listImages = <OverlayImage>[];
+    for (final k in _namedImages.keys) {
       listImages.add(_namedImages[k]!);
     }
     _images = listImages;

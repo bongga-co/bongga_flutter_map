@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class LineState {
   LineState({required this.mapController, required this.notify});
@@ -85,8 +85,8 @@ class LineState {
   }
 
   void _buildLines() {
-    var listLines = <Polyline>[];
-    for (var k in _namedLines.keys) {
+    final listLines = <Polyline>[];
+    for (final k in _namedLines.keys) {
       listLines.add(_namedLines[k]!);
     }
     _lines = listLines;

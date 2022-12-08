@@ -1,21 +1,21 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:rxdart/rxdart.dart' as rx;
+import 'package:bongga_flutter_map/src/ctrls/main_ctrl.dart';
+import 'package:bongga_flutter_map/src/models/main_ctrl_model.dart';
 import 'package:bongga_flutter_map/src/utils/position_util.dart';
 import 'package:bongga_flutter_map/src/widgets/dot_marker_widget.dart';
-import 'package:bongga_flutter_map/src/models/main_ctrl_model.dart';
-import 'package:bongga_flutter_map/src/ctrls/main_ctrl.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:rxdart/rxdart.dart' as rx;
 
 class Controller extends MainController {
   Controller({
-    required mapCtrl,
+    required super.mapCtrl,
     required this.bounds,
     this.locationUpdates,
-  }) : super(mapCtrl: mapCtrl) {
+  }) {
     locationUpdates = locationUpdates ?? true;
 
     if (locationUpdates!) {
@@ -65,7 +65,7 @@ class Controller extends MainController {
   /// Custom marker
   static Widget _buildMarker(BuildContext _) => const DotMarker();
 
-  void _getPositionStream(Stream<Position>? stream) async {
+  Future<void> _getPositionStream(Stream<Position>? stream) async {
     _positionStream = stream ?? PositionUtil.getPositionStream();
   }
 
@@ -120,13 +120,15 @@ class Controller extends MainController {
   }
 
   /// Toggle live position stream updates
-  void togglePositionStreamSubscription({Stream<Position>? stream}) async {
+  Future<void> togglePositionStreamSubscription({
+    Stream<Position>? stream,
+  }) async {
     locationUpdates = !locationUpdates!;
 
     if (!locationUpdates!) {
       await _positionSubs?.cancel();
     } else {
-      _getPositionStream(stream);
+      await _getPositionStream(stream);
       _subscribeToPositionStream();
     }
 

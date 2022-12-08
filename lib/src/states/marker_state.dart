@@ -1,4 +1,3 @@
-import 'package:flutter_map/flutter_map.dart';
 import 'package:bongga_flutter_map/bongga_flutter_map.dart';
 
 class MarkerState {
@@ -97,9 +96,9 @@ class MarkerState {
   }
 
   void _buildMarkers() {
-    var listMarkers = <Marker>[];
+    final listMarkers = <Marker>[];
 
-    for (var k in _namedMarkers.keys) {
+    for (final k in _namedMarkers.keys) {
       listMarkers.add(_namedMarkers[k]!);
     }
 

@@ -4,7 +4,7 @@ class RadarPainter extends CustomPainter {
   RadarPainter({
     required this.radius,
     this.width = 3,
-    this.color = const Color.fromRGBO(70, 70, 70, 1.0),
+    this.color = const Color.fromRGBO(70, 70, 70, 1),
   });
 
   final double radius;
@@ -26,10 +26,16 @@ class RadarPainter extends CustomPainter {
     final center = Offset(size.width * .5, size.height * .5);
     canvas
       ..drawCircle(center, radius, circle)
-      ..drawLine(Offset(center.dx, center.dy - radius),
-          Offset(center.dx, center.dy + radius), line)
-      ..drawLine(Offset(center.dx - radius, center.dy),
-          Offset(center.dx + radius, center.dy), line);
+      ..drawLine(
+        Offset(center.dx, center.dy - radius),
+        Offset(center.dx, center.dy + radius),
+        line,
+      )
+      ..drawLine(
+        Offset(center.dx - radius, center.dy),
+        Offset(center.dx + radius, center.dy),
+        line,
+      );
   }
 
   @override

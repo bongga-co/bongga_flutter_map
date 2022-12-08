@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:bongga_flutter_map/src/canvas/radar_canvas.dart';
+import 'package:flutter/material.dart';
 
 class Radar extends StatelessWidget {
-  const Radar({Key? key}) : super(key: key);
+  const Radar({super.key});
 
   static const _boxSize = 40.0;
 

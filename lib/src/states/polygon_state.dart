@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 /// State of the polygons on the map
 class PolygonState {
@@ -85,8 +85,8 @@ class PolygonState {
   }
 
   void _buildPolygons() {
-    var listPolygons = <Polygon>[];
-    for (var k in _namedPolygons.keys) {
+    final listPolygons = <Polygon>[];
+    for (final k in _namedPolygons.keys) {
       listPolygons.add(_namedPolygons[k]!);
     }
     _polygons = listPolygons;

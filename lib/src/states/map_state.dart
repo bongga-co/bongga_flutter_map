@@ -1,6 +1,6 @@
+import 'package:bongga_flutter_map/src/states/marker_state.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:bongga_flutter_map/src/states/marker_state.dart';
 
 class MapState {
   MapState({
@@ -53,7 +53,7 @@ class MapState {
   }
 
   /// This is used to handle the gestures
-  void onPositionChanged(MapPosition posChange, bool gesture) {
+  void onPositionChanged(MapPosition posChange, {bool gesture = false}) {
     if (posChange.zoom != null && posChange.zoom != _zoom) {
       _zoom = posChange.zoom!;
       notify('zoom', posChange.zoom, onPositionChanged);

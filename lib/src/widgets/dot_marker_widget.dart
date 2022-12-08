@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class DotMarker extends StatelessWidget {
   const DotMarker({
-    Key? key,
+    super.key,
     this.color = Colors.blue,
     this.size = 10,
     this.borderWidth = 1,
-  }) : super(key: key);
+  });
 
   final Color color;
   final double size;

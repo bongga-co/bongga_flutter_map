@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:bongga_flutter_map/bongga_flutter_map.dart';
+import 'package:flutter/material.dart';
 
 class BonggaMap extends StatefulWidget {
   const BonggaMap({
-    Key? key,
+    super.key,
     required this.controller,
     required this.options,
     this.layers = const <LayerOptions>[],
     this.hasRadar = false,
-  }) : super(key: key);
+  });
 
   final Controller controller;
   final MapOptions options;
